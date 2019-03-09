@@ -12,11 +12,16 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.math.BigDecimal;
 import interfaces.Compute;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
+import java.net.Socket;
 import java.net.SocketException;
+import java.net.UnknownHostException;
 
 public class ComputeClient {
     static String ipCliente="direccion";
@@ -25,6 +30,21 @@ public class ComputeClient {
     
     
     public static void main(String args[]) {
+        inicializarRMI();
+        
+        int topo=esperaTopo();
+        poblarTopo(topo);
+       
+        //Puebla el campo del topo correspondiente y inicia el mecanismo que envia al topo activado.
+        int machucado=esperaMartillazo();
+        topoMachucado();
+        
+        
+        
+        
+        
+    }
+    private static void inicializarRMI(){
         //El cliente inicia una sesión por medio de RMI y obtiene los puertos y la ip por la que recibirá al topo.
         System.setProperty("java.security.policy","/Users/jeroaranda/Documents/ITAM/DECIMO/SISTEMAS DISTR./proyecto01/whack-a-mole/topos/src/topos/client.policy");
         
@@ -44,7 +64,10 @@ public class ComputeClient {
             System.err.println("exception");
             e.printStackTrace();
         }
-        //Mientras el juego siga activo espera a un topo.
+    }
+    private static int esperaTopo(){
+    //Mientras el juego siga activo espera a un topo.
+        int topo=0;
         MulticastSocket s =null;
    	 try {
                 InetAddress group = InetAddress.getByName(ipServer); // destination multicast group 
@@ -70,13 +93,45 @@ public class ComputeClient {
 	 finally {
             if(s != null) s.close();
         }
-        //Puebla el campo del topo correspondiente y inicia el mecanismo que envia al topo activado.
-        
-        
-        
-        
-        
-        
-        
-    }    
+         return topo;
+    }
+    private static void topoMachucado() {
+       Socket s = null;
+	    try {
+	    	int serverPort = 7896;
+	   	
+                s = new Socket("localhost", serverPort);    
+             //   s = new Socket("127.0.0.1", serverPort);    
+		DataInputStream in = new DataInputStream( s.getInputStream());
+		DataOutputStream out =
+			new DataOutputStream( s.getOutputStream());
+		out.writeUTF("Hello");        	// UTF is a string encoding 
+                
+		String data = in.readUTF();	      
+                System.out.println("Received: "+ data) ;      
+       	    } 
+            catch (UnknownHostException e) {
+		System.out.println("Sock:"+e.getMessage()); 
+	    }
+            catch (EOFException e) {
+                System.out.println("EOF:"+e.getMessage());
+    	    } 
+            catch (IOException e) {
+                System.out.println("IO:"+e.getMessage());
+            } finally {
+                if(s!=null) 
+                    try {
+                        s.close();
+                    } catch (IOException e){
+                    System.out.println("close:"+e.getMessage());}
+                    }
+    }
+
+    private static void poblarTopo(int topo) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private static int esperaMartillazo() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }
