@@ -158,7 +158,8 @@ public class ComputeServer implements Compute {
             enviarTopo();
             int ganador=esperaGanador();
             puntoPara(ganador);
-        }     
+        }
+        enviarTopo();
     }
 
 }

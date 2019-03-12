@@ -31,16 +31,19 @@ public class ComputeClient {
     
     public static void main(String args[]) {
         inicializarRMI();
-        
+       
         int topo=esperaTopo();
+        while(topo>0){
         poblarTopo(topo);
        
         //Puebla el campo del topo correspondiente y inicia el mecanismo que envia al topo activado.
-        int machucado=esperaMartillazo();
+        
+       
+        esperaMartillazo();
         topoMachucado();
         
-        
-        
+        topo=esperaTopo();
+         }
         
         
     }
@@ -131,7 +134,7 @@ public class ComputeClient {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    private static int esperaMartillazo() {
+    private static Boolean esperaMartillazo() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
