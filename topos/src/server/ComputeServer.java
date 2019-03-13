@@ -38,10 +38,11 @@ public class ComputeServer implements Compute {
     
      
     static ArrayList<InetAddress> direccionesIP = new ArrayList();
-    static int[] score= new int[10];
+    static int[] score= new int[30];
     static int jugadoresActivos;
     static InetAddress ipServer;
     static int puertoServer=6789;
+    static int puertoServerReal=7896;
     static int n=4;
     public ComputeServer() throws RemoteException
     {
@@ -57,8 +58,10 @@ public class ComputeServer implements Compute {
          return false;
     }
     //incrementa el score del ganador.
-    private static void puntoPara(int jugador) {
-        score[jugador]++;
+    private static void puntoPara(String jugador) throws UnknownHostException {
+        InetAddress dir = InetAddress.getByName(jugador);
+        int id = direccionesIP.indexOf(dir);
+        score[id]++;
     }
     private static void inicializaRMI(){
         //Aquí se inicia el RMI
@@ -131,20 +134,21 @@ public class ComputeServer implements Compute {
            }
            return respo;
     }
-    public static int esperaGanador() throws IOException{
+    public static String esperaGanador() throws IOException{
         //Se espera la respuesta de la computadora ganadora y se incrementa el score del ganador, posteriormente se reinicia el juego.
-        int ganador=0;
-        int serverPort = 7896;
-        ServerSocket listenSocket = new ServerSocket(serverPort);
+        String ganador = "";
+        ServerSocket listenSocket = new ServerSocket(puertoServerReal);
         try{
-            listenSocket.setSoTimeout(3000);
+            listenSocket.setSoTimeout(7000);
             while(true) {
                 System.out.println("Waiting for messages..."); 
                 Socket clientSocket = listenSocket.accept();  // Listens for a connection to be made to this socket and accepts it. The method blocks until a connection is made. 
                 Connection c = new Connection(clientSocket);
                 c.start();
-                ganador=c.in.readInt();
+                ganador = c.in.readUTF();
+                System.out.println(ganador);
                 listenSocket.close();
+                puntoPara(ganador);
                 return ganador;  
             }
 	}
@@ -182,6 +186,14 @@ public class ComputeServer implements Compute {
             return puertoServer;
         return -1;
     }
+    
+        @Override
+    public int obtenerPuertoReal(InetAddress ipCliente) throws RemoteException {
+        if(direccionesIP.contains(ipCliente))
+            return puertoServerReal;
+        return -1;
+    }
+    
     public static void main(String[] args) throws UnknownHostException, IOException {
         System.setProperty("java.net.preferIPv4Stack", "true");
         ipServer = InetAddress.getByName("228.5.6.7");
@@ -191,10 +203,12 @@ public class ComputeServer implements Compute {
         //Aquí se inicia el envío de topos, es decir el comienzo del juego.
         while(!alguienHaGanao()){
             enviarTopo();
-            int ganador=esperaGanador();
-            puntoPara(ganador);
+            String ganador=esperaGanador();
+            
         }
         enviarTopo();
+        System.out.println("Ya tenemos un ganador");
+        
     }
 
 }

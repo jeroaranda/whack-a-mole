@@ -5,19 +5,95 @@
  */
 package topos;
 
+import interfaces.Compute;
+import java.awt.Color;
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.InetAddress;
+import java.net.MulticastSocket;
+import java.net.SocketException;
+import java.net.UnknownHostException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import static topos.ComputeClient.ipServer;
+
 /**
  *
  * @author diego
  */
 public class ventanaTopos extends javax.swing.JFrame {
-
+    
+    static InetAddress ipCliente;
+    static InetAddress ipServer;
+    static InetAddress ipServerReal;
+    static int puertoServer;
+    boolean flag = false;
     /**
      * Creates new form ventanaTopos
      */
     public ventanaTopos() {
         initComponents();
+        boton1.setEnabled(false);
+        boton2.setEnabled(false);
+        boton3.setEnabled(false);
+        boton4.setEnabled(false);
+        boton5.setEnabled(false);
+        boton6.setEnabled(false);
+        boton7.setEnabled(false);
+        boton8.setEnabled(false);
+        boton9.setEnabled(false);
+        boton10.setEnabled(false);
+        boton11.setEnabled(false);
+        boton12.setEnabled(false);
+        
+        
     }
 
+    public void resetFlag(){
+        flag = false;
+    }
+    
+    public void poblarTopoInd(int pos){
+        switch(pos){
+            case 1:
+                boton1.setEnabled(true);
+                break;
+            case 2:
+                boton2.setEnabled(true);
+                break;
+            case 3:
+                boton3.setEnabled(true);
+                break;
+            case 4:
+                boton4.setEnabled(true);
+                break;
+            case 5:
+                boton5.setEnabled(true);
+                break;
+            case 6:
+                boton6.setEnabled(true);
+                break;
+            case 7:
+                boton7.setEnabled(true);
+                break;
+            case 8:
+                boton8.setEnabled(true);
+                break;
+            case 9:
+                boton9.setEnabled(true);
+                break;
+            case 10:
+                boton10.setEnabled(true);
+                break;
+            case 11:
+                boton11.setEnabled(true);
+                break;
+            case 12:
+                boton12.setEnabled(true);
+                break;
+        }
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -188,87 +264,70 @@ public class ventanaTopos extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void boton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton5ActionPerformed
-        // TODO add your handling code here:
+        boton5.setEnabled(false);
+        flag = true;
+        
     }//GEN-LAST:event_boton5ActionPerformed
 
     private void boton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton1ActionPerformed
-        // TODO add your handling code here:
+        boton1.setEnabled(false);
+        flag = true;
     }//GEN-LAST:event_boton1ActionPerformed
 
     private void boton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton2ActionPerformed
-        // TODO add your handling code here:
+        boton2.setEnabled(false);
+        flag = true;
     }//GEN-LAST:event_boton2ActionPerformed
 
     private void boton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton3ActionPerformed
-        // TODO add your handling code here:
+        boton3.setEnabled(false);
+        flag = true;
     }//GEN-LAST:event_boton3ActionPerformed
 
     private void boton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton4ActionPerformed
-        // TODO add your handling code here:
+        boton4.setEnabled(false);
+        flag = true;
     }//GEN-LAST:event_boton4ActionPerformed
 
     private void boton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton6ActionPerformed
-        // TODO add your handling code here:
+        boton6.setEnabled(false);
+        flag = true;
     }//GEN-LAST:event_boton6ActionPerformed
 
     private void boton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton7ActionPerformed
-        // TODO add your handling code here:
+        boton7.setEnabled(false);
+        flag = true;
     }//GEN-LAST:event_boton7ActionPerformed
 
     private void boton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton8ActionPerformed
-        // TODO add your handling code here:
+        boton8.setEnabled(false);
+        flag = true;
     }//GEN-LAST:event_boton8ActionPerformed
 
     private void boton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton9ActionPerformed
-        // TODO add your handling code here:
+        boton9.setEnabled(false);
+        flag = true;
     }//GEN-LAST:event_boton9ActionPerformed
 
     private void boton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton10ActionPerformed
-        // TODO add your handling code here:
+        boton10.setEnabled(false);
+        flag = true;
     }//GEN-LAST:event_boton10ActionPerformed
 
     private void boton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton11ActionPerformed
-        // TODO add your handling code here:
+        boton11.setEnabled(false);
+        flag = true;
     }//GEN-LAST:event_boton11ActionPerformed
 
     private void boton12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton12ActionPerformed
-        // TODO add your handling code here:
+        boton12.setEnabled(false);
+        flag = true;
     }//GEN-LAST:event_boton12ActionPerformed
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ventanaTopos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ventanaTopos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ventanaTopos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ventanaTopos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new ventanaTopos().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JToggleButton boton1;
