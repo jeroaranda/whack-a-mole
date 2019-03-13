@@ -41,19 +41,28 @@ public class ComputeClient {
         ventanaTopos vent = new ventanaTopos();
         vent.setVisible(true);
         int topo = esperaTopo();
-        while(topo<13){
-            vent.poblarTopoInd(topo);
+        
+        while(true){
+            vent.cambiarTitulo("Bienvenido al juego");
+            if(topo<13){
+                vent.poblarTopoInd(topo);
             while(!vent.flag){
                 System.out.print("");
             }
-
             vent.resetFlag();
-            
             topoMachucado();
-            
-            //Puebla el campo del topo correspondiente y inicia el mecanismo que envia al topo activado.
             topo=esperaTopo();
-         }
+            }
+            else{
+                if(topo==13){
+                    vent.cambiarTitulo("Ya hay un ganador");
+                }
+                else{
+                    System.out.println("Esto está pendiente");
+                }
+                topo=esperaTopo();
+            }
+        }
         
         
     }
@@ -67,7 +76,7 @@ public class ComputeClient {
         try {
             String name = "Compute";
             
-            Registry registry = LocateRegistry.getRegistry("localhost"); // server's ip address args[0]
+            Registry registry = LocateRegistry.getRegistry("10.6.75.115"); // server's ip address args[0]
             Compute comp = (Compute) registry.lookup(name);
             comp.crearSesion(ipCliente);
             ipServer=comp.obtenerIP(ipCliente);
@@ -75,7 +84,7 @@ public class ComputeClient {
             puertoServer=comp.obtenerPuerto(ipCliente);
             puertoServerReal=comp.obtenerPuertoReal(ipCliente);
             System.out.println(prueba);
-            
+          
         } catch (Exception e) {
             System.err.println("exception");
             e.printStackTrace();

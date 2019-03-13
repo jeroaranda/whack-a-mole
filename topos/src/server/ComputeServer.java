@@ -57,6 +57,13 @@ public class ComputeServer implements Compute {
         }
          return false;
     }
+    
+    private static void resetScores(){
+        for (int i = 0; i < jugadoresActivos; i++){
+            score[i] = 0;
+        }
+    }
+    
     //incrementa el score del ganador.
     private static void puntoPara(String jugador) throws UnknownHostException {
         InetAddress dir = InetAddress.getByName(jugador);
@@ -153,8 +160,8 @@ public class ComputeServer implements Compute {
             }
 	}
         catch(IOException e) {
+            System.out.println(e.getMessage().equals("Accept timed out"));
             if(e.getMessage().equals("Accept timed out")){
-                System.out.println("Hubo timeout de espera ganador");
                 listenSocket.close();
             }
             //System.out.println("Listen :"+ e.getMessage());
@@ -201,13 +208,16 @@ public class ComputeServer implements Compute {
         System.out.println(direccionesIP.toString());
         
         //Aquí se inicia el envío de topos, es decir el comienzo del juego.
-        while(!alguienHaGanao()){
+        while(true){
+            while(!alguienHaGanao()){
+                enviarTopo();
+                String ganador=esperaGanador();
+
+            }
             enviarTopo();
-            String ganador=esperaGanador();
-            
+            System.out.println("Ya tenemos un ganador");
+            resetScores();    
         }
-        enviarTopo();
-        System.out.println("Ya tenemos un ganador");
         
     }
 
