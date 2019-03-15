@@ -199,7 +199,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="titulo">
       <Properties>
-        <Property name="text" type="java.lang.String" value="El est&#xe1; por comenzar"/>
+        <Property name="text" type="java.lang.String" value="El juego est&#xe1; por comenzar"/>
       </Properties>
     </Component>
   </SubComponents>

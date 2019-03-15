@@ -126,7 +126,7 @@ public class ventanaTopos extends javax.swing.JFrame {
     }
     
     public void cambiarTitulo(String tit){
-        titulo.setText("Ya hay un ganador");
+        titulo.setText(tit);
     }
     
     /**
@@ -238,7 +238,7 @@ public class ventanaTopos extends javax.swing.JFrame {
             }
         });
 
-        titulo.setText("El está por comenzar");
+        titulo.setText("El juego está por comenzar");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);

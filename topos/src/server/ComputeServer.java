@@ -58,6 +58,16 @@ public class ComputeServer implements Compute {
          return false;
     }
     
+    private static String quiengano(){
+        String res = "";
+        for (int i = 0; i < jugadoresActivos; i++) {
+            if(score[i]==n){
+                res = direccionesIP.get(i).getHostAddress();
+            }
+        }
+        return res;
+    }
+    
     private static void resetScores(){
         for (int i = 0; i < jugadoresActivos; i++){
             score[i] = 0;
@@ -116,13 +126,24 @@ public class ComputeServer implements Compute {
         //Se envía por multicast el topo;
             MulticastSocket s =null;
             Boolean respo = true;
+            String ipgan = "";
+            int aux;
+            String resp;
             try {
                    InetAddress group = InetAddress.getByName("228.5.6.7"); // destination multicast group 
                    s = new MulticastSocket(puertoServer);
                    s.joinGroup(group); 
-                   String resp = String.valueOf(getRand(1,12));
-                   if(alguienHaGanao())
-                       resp = "13";
+                   aux = (getRand(1,12));
+                   if(aux<10)
+                    resp = String.valueOf(aux)+"#";
+                   else{
+                    resp = String.valueOf(aux)+"#";
+                   }
+                   if(alguienHaGanao()){
+                       ipgan = quiengano()+"#"; //Aquí necesitamos el ip del cliente ganador
+                       resp = "13" + ipgan;// +ipgan + "#";                      
+                   }
+
                    String myMessage=resp;
                    byte [] m = myMessage.getBytes();
                    DatagramPacket messageOut = 
@@ -153,16 +174,18 @@ public class ComputeServer implements Compute {
                 Connection c = new Connection(clientSocket);
                 c.start();
                 ganador = c.in.readUTF();
-                System.out.println(ganador);
                 listenSocket.close();
                 puntoPara(ganador);
                 return ganador;  
             }
 	}
         catch(IOException e) {
-            System.out.println(e.getMessage().equals("Accept timed out"));
-            if(e.getMessage().equals("Accept timed out")){
-                listenSocket.close();
+            //System.out.println(e.getMessage().equals("Accept timed out"));
+            if(e.getMessage()!=null){
+                //listenSocket.close();
+                if(e.getMessage().equals("Accept timed out")){
+                    listenSocket.close();
+                }
             }
             //System.out.println("Listen :"+ e.getMessage());
         }
@@ -205,18 +228,18 @@ public class ComputeServer implements Compute {
         System.setProperty("java.net.preferIPv4Stack", "true");
         ipServer = InetAddress.getByName("228.5.6.7");
         inicializaRMI();
-        System.out.println(direccionesIP.toString());
         
         //Aquí se inicia el envío de topos, es decir el comienzo del juego.
         while(true){
             while(!alguienHaGanao()){
+                //System.out.println(alguienHaGanao());
                 enviarTopo();
                 String ganador=esperaGanador();
 
             }
             enviarTopo();
-            System.out.println("Ya tenemos un ganador");
-            resetScores();    
+            resetScores(); 
+            //System.out.println(alguienHaGanao());
         }
         
     }

@@ -31,6 +31,7 @@ public class ComputeClient {
     static InetAddress ipServerReal;
     static int puertoServer;
     static int puertoServerReal;
+    static String ganador;
     
     
     public static void main(String args[]) throws UnknownHostException {
@@ -44,18 +45,24 @@ public class ComputeClient {
         
         while(true){
             vent.cambiarTitulo("Bienvenido al juego");
+            System.out.println(topo);
             if(topo<13){
-                vent.poblarTopoInd(topo);
-            while(!vent.flag){
-                System.out.print("");
-            }
-            vent.resetFlag();
-            topoMachucado();
-            topo=esperaTopo();
+                    vent.cambiarTitulo("El juego ya ha comenzado");
+                    vent.poblarTopoInd(topo);
+                while(!vent.flag){
+                    System.out.print("");
+                }
+                vent.resetFlag();
+                topoMachucado();
+                topo=esperaTopo();
             }
             else{
                 if(topo==13){
-                    vent.cambiarTitulo("Ya hay un ganador");
+                    ganador = ganador.substring(2,ganador.indexOf("#"));
+                    if(ganador.equals(ipCliente.getHostAddress()))
+                        vent.cambiarTitulo("Ya hay un ganador y eres tú");
+                    else
+                        vent.cambiarTitulo("Ya hay un ganador y es: "+ganador);        
                 }
                 else{
                     System.out.println("Esto está pendiente");
@@ -93,6 +100,7 @@ public class ComputeClient {
     private static int esperaTopo(){
     //Mientras el juego siga activo espera a un topo.
         int topo=0;
+        String rec;
         MulticastSocket s =null;
    	 try {
                 InetAddress group = ipServer; // destination multicast group 
@@ -104,10 +112,18 @@ public class ComputeClient {
                 System.out.println("Waiting for messages");
                 DatagramPacket messageIn = new DatagramPacket(buffer, buffer.length);
                 s.receive(messageIn);
-                if(messageIn.getData()[1]==0)
-                    topo = messageIn.getData()[0] - 48;
+                String datos=new String(messageIn.getData());
+                
+                if(datos.substring(0,2).equals("13")){
+                    topo = 13;
+                    rec = new String(messageIn.getData());
+                    ganador=rec;
+                    System.out.println(rec);
+                    
+                }
                 else{
-                    topo = messageIn.getData()[1] - 38;
+                    topo = Integer.parseInt(datos.substring(0,datos.indexOf("#")));
+                    System.out.println(topo);
                 }
                 System.out.println("Se recibió el topo: " + topo + " desde la direccion" + messageIn.getAddress() + "lo mando el servidor y lo recibió el cliente");
   	     	ipServerReal = messageIn.getAddress();
@@ -130,8 +146,7 @@ public class ComputeClient {
                 s = new Socket(ipServerReal, puertoServerReal);  
 		DataInputStream in = new DataInputStream( s.getInputStream());
 		DataOutputStream out = new DataOutputStream( s.getOutputStream());
-		out.writeUTF(ipCliente.getHostAddress());        	// UTF is a string encoding 	      
-                System.out.println("Envía mensaje de pegarle al topo") ;      
+		out.writeUTF(ipCliente.getHostAddress());        	// UTF is a string encoding 	          
        	    } 
             catch (UnknownHostException e) {
 		System.out.println("Sock:"+e.getMessage()); 
