@@ -83,7 +83,7 @@ public class ComputeServer implements Compute {
     private static void inicializaRMI(){
         //Aquí se inicia el RMI
         
-        System.setProperty("java.security.policy","/Users/diego/whack-a-mole/topos/src/server/server.policy");
+        System.setProperty("java.security.policy","/Users/jeroaranda/Documents/ITAM/DECIMO/SISTEMAS DISTR./proyecto01/whack-a-mole/topos/src/server/server.policy");
 
         if (System.getSecurityManager() == null) {
 
